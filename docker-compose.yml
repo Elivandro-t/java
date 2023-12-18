@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: pedidos
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+  jdk:
+    image: elivandro/pedidos-ms:1.0
+    container_name: elivadro-container
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./elivanro:/var/lib/mysql

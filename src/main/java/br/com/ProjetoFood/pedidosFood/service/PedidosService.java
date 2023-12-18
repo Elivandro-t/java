@@ -1,6 +1,7 @@
 package br.com.ProjetoFood.pedidosFood.service;
 
 import br.com.ProjetoFood.pedidosFood.DTOPedidos.DTOpedidos;
+import br.com.ProjetoFood.pedidosFood.DTOPedidos.StatusDTO;
 import br.com.ProjetoFood.pedidosFood.Models.Pedidos;
 import br.com.ProjetoFood.pedidosFood.Models.Status;
 import br.com.ProjetoFood.pedidosFood.repository.PedidosRepository;
@@ -35,18 +36,35 @@ private ModelMapper modelMapper;
     }
 
     // atualizar
-    public DTOpedidos atualizar(Long id,DTOpedidos dtOpedidos){
+    public DTOpedidos atualizar(Long id, StatusDTO status){
         Pedidos pedidos = repository.pegarPorId(id);
         if(pedidos==null){
             throw new EntityNotFoundException();
         }
             pedidos.setData(LocalDateTime.now());
-            pedidos.setStatus(dtOpedidos.getStatus());
-            repository.atualizaStatus(dtOpedidos.getStatus(),pedidos);
+            pedidos.setStatus(status.getStatus());
+            repository.atualizaStatus(status.getStatus(),pedidos);
       return modelMapper.map(pedidos,DTOpedidos.class);
     }
     // deletando pedido
     public void excluir(Long id){
         repository.deleteById(id);
+    }
+    //mudando status do pedido
+    public void StatusPago(Long id){
+        Pedidos pedidos = repository.pegarPorId(id);
+        if(pedidos==null){
+            throw new EntityNotFoundException();
+        }
+        pedidos.setStatus(Status.PAGO);
+        repository.atualizaStatus(Status.PAGO,pedidos);
+    }
+    // listando um pedido por id
+    public  DTOpedidos ListaPedidoPorID(Long id){
+        var result = repository.getReferenceById(id);
+        if(result==null){
+            throw  new RuntimeException();
+        }
+        return modelMapper.map(result,DTOpedidos.class);
     }
 }
